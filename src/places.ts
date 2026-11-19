@@ -81,7 +81,7 @@ export const isLoaded = (): boolean => typeof getMaps()?.importLibrary === 'func
 let places: Promise<PlacesLibrary> | undefined
 
 export const loadPlaces = (): Promise<PlacesLibrary> => {
-  if (!isLoaded()) return Promise.reject(new Error('placeahead: the Google Maps JavaScript API is not loaded'))
+  if (!isLoaded()) return Promise.reject(new Error('google-places-autocomplete-hook: the Google Maps JavaScript API is not loaded'))
   if (!places) {
     // forget a failed load so the next call can try again
     places = getMaps()
@@ -95,7 +95,9 @@ export const loadPlaces = (): Promise<PlacesLibrary> => {
 }
 
 export const loadLibrary = <T>(name: string): Promise<T> =>
-  isLoaded() ? getMaps().importLibrary(name) : Promise.reject(new Error('placeahead: the Google Maps JavaScript API is not loaded'))
+  isLoaded()
+    ? getMaps().importLibrary(name)
+    : Promise.reject(new Error('google-places-autocomplete-hook: the Google Maps JavaScript API is not loaded'))
 
 export const toSuggestion = (prediction: PlacePrediction): Suggestion => ({
   placeId: prediction.placeId,

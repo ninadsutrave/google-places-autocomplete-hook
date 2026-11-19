@@ -2,7 +2,7 @@
 import './loadMaps'
 import { StrictMode, useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import usePlacesAutocomplete, { getDetails, getLatLng } from 'placeahead/compat'
+import usePlacesAutocomplete, { getDetails, getLatLng } from 'google-places-autocomplete-hook/compat'
 
 function LegacySearch() {
   const {

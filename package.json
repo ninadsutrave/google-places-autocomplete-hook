@@ -1,12 +1,12 @@
 {
-  "name": "placeahead",
+  "name": "google-places-autocomplete-hook",
   "version": "0.1.0",
   "description": "React hook for Google Places Autocomplete on the Places API (New), with session tokens handled for you and a drop-in mode for use-places-autocomplete",
   "license": "MIT",
   "author": "Ninad Sutrave",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ninadsutrave/placeahead.git"
+    "url": "git+https://github.com/ninadsutrave/google-places-autocomplete-hook.git"
   },
   "keywords": [
     "react",
@@ -78,8 +78,8 @@
     "typescript": "^5.8.0",
     "vitest": "^3.2.0"
   },
-  "homepage": "https://github.com/ninadsutrave/placeahead#readme",
+  "homepage": "https://github.com/ninadsutrave/google-places-autocomplete-hook#readme",
   "bugs": {
-    "url": "https://github.com/ninadsutrave/placeahead/issues"
+    "url": "https://github.com/ninadsutrave/google-places-autocomplete-hook/issues"
   }
 }

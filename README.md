@@ -1,13 +1,13 @@
-# placeahead
+# google-places-autocomplete-hook
 
-[![npm](https://img.shields.io/npm/v/placeahead)](https://www.npmjs.com/package/placeahead)
-[![ci](https://github.com/ninadsutrave/placeahead/actions/workflows/ci.yml/badge.svg)](https://github.com/ninadsutrave/placeahead/actions/workflows/ci.yml)
-[![size](https://img.shields.io/bundlejs/size/placeahead)](https://bundlejs.com/?q=placeahead)
-[![license](https://img.shields.io/npm/l/placeahead)](LICENSE)
+[![npm](https://img.shields.io/npm/v/google-places-autocomplete-hook)](https://www.npmjs.com/package/google-places-autocomplete-hook)
+[![ci](https://github.com/ninadsutrave/google-places-autocomplete-hook/actions/workflows/ci.yml/badge.svg)](https://github.com/ninadsutrave/google-places-autocomplete-hook/actions/workflows/ci.yml)
+[![size](https://img.shields.io/bundlejs/size/google-places-autocomplete-hook)](https://bundlejs.com/?q=google-places-autocomplete-hook)
+[![license](https://img.shields.io/npm/l/google-places-autocomplete-hook)](LICENSE)
 
 A small React hook for Google Places Autocomplete on the **Places API (New)**.
 
-Google moved the old Places API and `AutocompleteService` to legacy status on 1 March 2025. Popular hooks such as `use-places-autocomplete` still use it. This package uses the new `AutocompleteSuggestion` API instead. It keeps one session token per search, so typing and the final details request are billed as one session. It also includes a [drop-in mode](#migrating-from-use-places-autocomplete) for `use-places-autocomplete`.
+Google moved the old Places API and `AutocompleteService` to legacy status on 1 March 2025, and since October 2026 the legacy Places API can no longer be enabled on new Google Cloud projects. Popular hooks such as `use-places-autocomplete` still depend on it, so they don't work for a new project. This package uses the new `AutocompleteSuggestion` API instead. It keeps one session token per search, so typing and the final details request are billed as one session. It also includes a [drop-in mode](#migrating-from-use-places-autocomplete) for `use-places-autocomplete`.
 
 - Headless: bring your own input and list
 - Session tokens handled for you
@@ -15,10 +15,12 @@ Google moved the old Places API and `AutocompleteService` to legacy status on 1 
 - TypeScript types without needing `@types/google.maps`
 - React 16.8 to 19, works with server rendering, no dependencies
 
+On the server, [google-maps-fetch](https://github.com/ninadsutrave/google-maps-fetch) is the companion package: a small client for Places, Routes, Geocoding and the other Maps web APIs, with a drop-in replacement for `@googlemaps/google-maps-services-js`.
+
 ## Install
 
 ```sh
-npm install placeahead
+npm install google-places-autocomplete-hook
 ```
 
 Enable **Places API (New)** for your key in Google Cloud, then load the Maps JavaScript API:
@@ -32,7 +34,7 @@ Any loader that defines `google.maps.importLibrary` works too. The hook loads th
 ## Usage
 
 ```jsx
-import { usePlaces } from 'placeahead'
+import { usePlaces } from 'google-places-autocomplete-hook'
 
 export function PlaceSearch() {
   const { ready, value, setValue, suggestions, status, clearSuggestions, getPlace } = usePlaces({
@@ -98,7 +100,7 @@ Change the import:
 
 ```diff
 - import usePlacesAutocomplete, { getDetails, getGeocode, getLatLng, getZipCode } from 'use-places-autocomplete'
-+ import usePlacesAutocomplete, { getDetails, getGeocode, getLatLng, getZipCode } from 'placeahead/compat'
++ import usePlacesAutocomplete, { getDetails, getGeocode, getLatLng, getZipCode } from 'google-places-autocomplete-hook/compat'
 ```
 
 The hook returns the same `{ ready, value, suggestions: { loading, status, data }, setValue, clearSuggestions, clearCache, init }`. Each item in `data` has the legacy prediction shape: `description`, `place_id`, `structured_formatting`, `matched_substrings`, `terms` and `types`.
@@ -122,3 +124,5 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). Please follow the [code of conduct](CODE
 ## License
 
 [MIT](LICENSE)
+
+This is an independent project, not affiliated with or endorsed by Google. Google Maps is a trademark of Google LLC.

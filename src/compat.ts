@@ -1,5 +1,5 @@
 // Same API as use-places-autocomplete 4.x, running on the Places API (New).
-// Switch by changing the import to "placeahead/compat".
+// Switch by changing the import to "google-places-autocomplete-hook/compat".
 import { useEffect } from 'react'
 import { AutocompleteRequest, LatLngLiteral, Place, PlacePrediction, StringRange, Suggestion, loadLibrary, loadPlaces } from './places'
 import { usePlaces } from './usePlaces'
@@ -257,7 +257,7 @@ const value = (v: number | (() => number)) => (typeof v === 'function' ? v() : v
 
 export const getLatLng = (result: { geometry?: { location: LatLngLike } }): LatLngLiteral => {
   const location = result.geometry?.location as { lat: number | (() => number); lng: number | (() => number) } | undefined
-  if (!location) throw new Error('placeahead: the result has no geometry; request the "geometry" field')
+  if (!location) throw new Error('google-places-autocomplete-hook: the result has no geometry; request the "geometry" field')
   return { lat: value(location.lat), lng: value(location.lng) }
 }
 

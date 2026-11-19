@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { usePlaces } from 'placeahead'
+import { usePlaces } from 'google-places-autocomplete-hook'
 
 // An accessible combobox: arrow keys move through suggestions, Enter picks one, Escape closes the list.
 export function PlaceSearch() {

@@ -14,7 +14,7 @@ afterEach(() => {
   expect(errors).not.toHaveBeenCalled()
 })
 
-describe('placeahead/compat', () => {
+describe('google-places-autocomplete-hook/compat', () => {
   it('returns the use-places-autocomplete shape with legacy predictions', async () => {
     const { result, unmount } = await renderHook(() => usePlacesAutocomplete({ debounce: 0 }))
     await wait(0)

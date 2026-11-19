@@ -1,5 +1,5 @@
 {
-  "name": "placeahead-example",
+  "name": "google-places-autocomplete-hook-example",
   "private": true,
   "type": "module",
   "scripts": {
@@ -7,7 +7,7 @@
     "build": "vite build"
   },
   "dependencies": {
-    "placeahead": "file:..",
+    "google-places-autocomplete-hook": "file:..",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

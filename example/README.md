@@ -1,9 +1,9 @@
-# placeahead example
+# google-places-autocomplete-hook example
 
-Two pages built on placeahead:
+Two pages built on google-places-autocomplete-hook:
 
 - `index.html`: an accessible place search box with keyboard navigation, using `usePlaces`
-- `compat.html`: the same search written against use-places-autocomplete's API, imported from `placeahead/compat`
+- `compat.html`: the same search written against use-places-autocomplete's API, imported from `google-places-autocomplete-hook/compat`
 
 To run them:
 

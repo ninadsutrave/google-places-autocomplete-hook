@@ -12,8 +12,8 @@ Thanks for helping out. Bug reports, fixes, docs and ideas are all welcome.
 You need Node 20 or later.
 
 ```sh
-git clone https://github.com/ninadsutrave/placeahead.git
-cd placeahead
+git clone https://github.com/ninadsutrave/google-places-autocomplete-hook.git
+cd google-places-autocomplete-hook
 npm install
 ```
 
