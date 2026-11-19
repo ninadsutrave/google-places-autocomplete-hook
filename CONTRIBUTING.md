@@ -21,6 +21,7 @@ npm install
 | :--------------------- | :--------------------------------------- |
 | `npm test`             | Run the tests (Vitest, jsdom)            |
 | `npm run typecheck`    | Type-check the source and tests          |
+| `npm run lint`         | Lint with ESLint                         |
 | `npm run build`        | Build `dist` with tsup                   |
 | `npm run format`       | Format with Prettier                     |
 | `npm run lint:package` | Check the published package with publint |
@@ -39,7 +40,7 @@ npm run dev
 ## Pull requests
 
 - Keep each PR to one change, and add a test for it.
-- Run `npm test`, `npm run typecheck` and `npm run format` before pushing.
+- Run `npm test`, `npm run typecheck`, `npm run lint` and `npm run format` before pushing.
 - If the change affects users, add a changeset with `npx changeset` and describe it in a sentence or two. It ends up in the changelog.
 
 ## Releasing

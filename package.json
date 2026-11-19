@@ -51,11 +51,15 @@
     "compat"
   ],
   "sideEffects": false,
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
     "test": "vitest run",
-    "prepublishOnly": "npm run typecheck && npm test && npm run build && npm run lint:package",
+    "prepublishOnly": "npm run typecheck && npm run lint && npm test && npm run build && npm run lint:package",
     "changeset": "changeset",
     "release": "npm run build && changeset publish",
     "format": "prettier --write .",
@@ -67,8 +71,11 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.0",
+    "@eslint/js": "^10.0.1",
     "@types/react": "^18.3.0",
     "@types/react-dom": "^18.3.0",
+    "eslint": "^10.15.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "jsdom": "^26.0.0",
     "prettier": "^3.10.1",
     "publint": "^0.3.25",
@@ -76,6 +83,7 @@
     "react-dom": "^18.3.1",
     "tsup": "^8.5.0",
     "typescript": "^5.8.0",
+    "typescript-eslint": "^8.73.0",
     "vitest": "^3.2.0"
   },
   "homepage": "https://github.com/ninadsutrave/google-places-autocomplete-hook#readme",

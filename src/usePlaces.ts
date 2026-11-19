@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { AutocompleteRequest, Place, Session, Suggestion, createSession, isLoaded, loadPlaces, toSuggestion } from './places'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { AutocompleteRequest, Place, Session, Suggestion, createSession, isLoaded, loadPlaces, sessionOf, toSuggestion } from './places'
 
 export interface UsePlacesOptions {
   /** Sent with every request, e.g. { includedRegionCodes: ['in'], language: 'en' } */
@@ -19,15 +19,15 @@ export interface UsePlacesResult {
   /** The places library has loaded */
   ready: boolean
   value: string
-  /** Update the input value, and fetch suggestions for it unless shouldFetch is false */
+  /** Update the input value, and fetch suggestions for it. With shouldFetch false, for example after a selection, the current session ends too */
   setValue: (value: string, shouldFetch?: boolean) => void
   suggestions: Suggestion[]
   status: PlacesStatus
   loading: boolean
   error: unknown
   clearSuggestions: () => void
-  /** Fetch details for a suggestion (default fields: id, formattedAddress, location). This ends the session, so the next keystroke starts a new one. */
-  getPlace: (suggestion: Suggestion, fields?: string[]) => Promise<Place>
+  /** Fetch details for a suggestion (default fields: id, formattedAddress, location). This ends its session, so the next keystroke starts a new one. */
+  getPlace: (suggestion: Suggestion, fields?: readonly string[]) => Promise<Place>
   /** Load the places library, for when the Maps script loads after mount */
   init: () => void
 }
@@ -41,8 +41,11 @@ interface State {
 
 const idle: State = { status: 'idle', suggestions: [], loading: false, error: undefined }
 
+// useLayoutEffect warns during server rendering on React 17 and 18, where no effect runs anyway
+const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect
+
 // all in Google's cheapest Place Details tier (Essentials); displayName and most other fields cost more
-export const defaultFields = ['id', 'formattedAddress', 'location']
+export const defaultFields: readonly string[] = Object.freeze(['id', 'formattedAddress', 'location'])
 
 export function usePlaces({
   request,
@@ -56,14 +59,16 @@ export function usePlaces({
   const [state, setState] = useState<State>(idle)
 
   const session = useRef<Session | null>(null)
-  if (!session.current) session.current = createSession()
+  if (session.current == null) session.current = createSession()
   // newest request id; responses for older ones are dropped
   const latest = useRef(0)
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const mounted = useRef(false)
-  // read the latest options at fetch time without re-creating callbacks
+  // read the latest options at fetch time without re-creating callbacks; updated as soon as a render commits
   const options = useRef(request)
-  options.current = request
+  useIsomorphicLayoutEffect(() => {
+    options.current = request
+  })
 
   const init = useCallback(() => {
     if (!isLoaded()) return
@@ -91,20 +96,22 @@ export function usePlaces({
       clearTimeout(timer.current)
       clearInterval(poll)
     }
-  }, [])
+  }, [init, initOnMount])
 
   const fetchSuggestions = useCallback(async (input: string) => {
     const id = ++latest.current
+    const current = session.current!
     setState((prev) => ({ ...prev, loading: true }))
     try {
       const library = await loadPlaces()
       const { suggestions } = await library.AutocompleteSuggestion.fetchAutocompleteSuggestions({
         ...options.current,
         input,
-        sessionToken: session.current!.token(library),
+        sessionToken: current.token(library),
       })
       if (id !== latest.current || !mounted.current) return
       const data = suggestions.flatMap((s) => (s.placePrediction ? [toSuggestion(s.placePrediction)] : []))
+      for (const s of data) sessionOf.set(s.prediction, current)
       setReady(true)
       setState({ status: data.length ? 'ok' : 'zero-results', suggestions: data, loading: false, error: undefined })
     } catch (error) {
@@ -123,22 +130,26 @@ export function usePlaces({
     (next: string, shouldFetch = true) => {
       setValueState(next)
       clearTimeout(timer.current)
-      if (!shouldFetch) return
+      if (!shouldFetch) {
+        // a value set without fetching is a selection or a reset: that search is over, so the next one gets its own session
+        session.current = createSession()
+        return
+      }
       if (next.trim().length < minLength) return clearSuggestions()
       timer.current = setTimeout(() => fetchSuggestions(next), debounce)
     },
     [debounce, minLength, fetchSuggestions, clearSuggestions],
   )
 
-  const getPlace = useCallback(async (suggestion: Suggestion, fields = defaultFields) => {
-    try {
-      const place = suggestion.prediction.toPlace()
-      await place.fetchFields({ fields })
-      return place
-    } finally {
-      // the details call closes the session even if it failed
-      session.current!.end()
-    }
+  const getPlace = useCallback(async (suggestion: Suggestion, fields: readonly string[] = defaultFields) => {
+    // The prediction carries the token of the session it came from, so this call ends that session at Google
+    // whatever happens here. If that session is the current one, move on to a new one now, before the details
+    // call resolves, so a keystroke in the meantime doesn't reuse a token that is about to be spent.
+    const owner = sessionOf.get(suggestion.prediction)
+    if (!owner || owner === session.current) session.current = createSession()
+    const place = suggestion.prediction.toPlace()
+    await place.fetchFields({ fields: [...fields] })
+    return place
   }, [])
 
   return { ready, value, setValue, ...state, clearSuggestions, getPlace, init }

@@ -89,7 +89,7 @@ describe('usePlaces edge cases', () => {
     let request = { includedRegionCodes: ['in'] }
     const { result, unmount } = await renderHook(() => usePlaces({ debounce: 0, request }))
     request = { includedRegionCodes: ['np'] }
-    await act(() => result.current.clearSuggestions()) // re-render with the new options
+    await act(() => result.current.setValue('k', false)) // a committed re-render with the new options
     await act(() => result.current.setValue('ka'))
     await wait(10)
     expect(fake.requests[0].includedRegionCodes).toEqual(['np'])

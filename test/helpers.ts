@@ -38,6 +38,7 @@ export class FakePlace {
   }
   async fetchFields({ fields }: { fields: string[] }) {
     fake.fetchFieldsCalls.push({ id: this.id, fields, fromPrediction: this.fromPrediction })
+    await sleep(fake.detailsDelay)
     if (fake.failDetails) throw new Error('details failed')
     this.fetched = fields
     this.displayName = `Name of ${this.id}`
@@ -70,6 +71,7 @@ export const fake = {
   fetchFieldsCalls: [] as { id: string; fields: string[]; fromPrediction: boolean }[],
   tokens: 0,
   failDetails: false,
+  detailsDelay: 0,
   // per-input delay and results
   delay: (_input: string) => 0,
   results: (input: string): FakePrediction[] =>
@@ -120,6 +122,7 @@ export const resetFake = () => {
   fake.requests = []
   fake.fetchFieldsCalls = []
   fake.failDetails = false
+  fake.detailsDelay = 0
   fake.delay = () => 0
   fake.fail = () => false
   fake.results = (input) =>

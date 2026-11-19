@@ -1,6 +1,16 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import usePlacesAutocomplete, { getDetails, getGeocode, getLatLng, getZipCode, toAutocompleteRequest } from '../src/compat'
-import { act, fake, installGoogle, removeGoogle, renderHook, resetFake, wait } from './helpers'
+import usePlacesAutocomplete, {
+  getDetails,
+  getGeocode,
+  getLatLng,
+  getZipCode,
+  toAutocompleteRequest,
+  type ClearCache,
+  type GetDetailsArgs,
+  type Status,
+  type Suggestions,
+} from '../src/compat'
+import { act, fake, installGoogle, prediction, removeGoogle, renderHook, resetFake, wait } from './helpers'
 
 const errors = vi.spyOn(console, 'error')
 
@@ -143,5 +153,79 @@ describe('google-places-autocomplete-hook/compat', () => {
     expect(result.current.ready).toBe(true)
     await unmount()
     expect(w.initMap).toBeUndefined()
+  })
+})
+
+describe('sessions through getDetails', () => {
+  it('fetches a shown place through its prediction once, then by ID, without touching the current search', async () => {
+    const pune = prediction('pune', 'Pune', 'Maharashtra, India')
+    fake.results = (input) => (input.startsWith('ba') ? [prediction('bali', 'Bali', 'Indonesia')] : [pune])
+    const { result, unmount } = await renderHook(() => usePlacesAutocomplete({ debounce: 0 }))
+    await act(() => result.current.setValue('pu'))
+    await wait(10)
+    await act(() => result.current.setValue('Pune, Maharashtra, India', false))
+    await act(() => result.current.clearSuggestions())
+    await act(async () => {
+      await getDetails({ placeId: 'pune' })
+    })
+    await act(() => result.current.setValue('ba'))
+    await wait(10)
+    const current = fake.requests[1].sessionToken
+    await act(async () => {
+      await getDetails({ placeId: 'pune' })
+    })
+    await act(() => result.current.setValue('bal'))
+    await wait(10)
+    expect(fake.fetchFieldsCalls.map((c) => c.fromPrediction)).toEqual([true, false])
+    expect(fake.requests[2].sessionToken).toBe(current)
+    await unmount()
+  })
+
+  it('maps the legacy "address" type and drops "geocode"', () => {
+    expect(toAutocompleteRequest({ types: ['address'] }).includedPrimaryTypes).toEqual(['street_address', 'premise', 'subpremise', 'route'])
+    expect(toAutocompleteRequest({ types: ['geocode'] }).includedPrimaryTypes).toBeUndefined()
+    expect(toAutocompleteRequest({ types: ['(cities)'] }).includedPrimaryTypes).toEqual(['(cities)'])
+  })
+
+  it('keeps the same data array between renders that do not change the suggestions', async () => {
+    const { result, unmount } = await renderHook(() => usePlacesAutocomplete({ debounce: 0 }))
+    await act(() => result.current.setValue('pu'))
+    await wait(10)
+    const { data } = result.current.suggestions
+    await act(() => result.current.setValue('pu', false))
+    expect(result.current.suggestions.data).toBe(data)
+    await unmount()
+  })
+
+  it('types line up with use-places-autocomplete', () => {
+    const status: Status = 'REQUEST_DENIED'
+    const list: Suggestions = { loading: false, status, data: [] }
+    const clear: ClearCache = () => {}
+    clear('upa')
+    const args: GetDetailsArgs = { placeId: 'x', fields: ['name'] }
+    expect(list.data).toEqual([])
+    expect(args.placeId).toBe('x')
+  })
+})
+
+describe('what getDetails remembers', () => {
+  it('a new search replaces what the hook remembered, and unmounting drops it', async () => {
+    fake.results = (input) => (input.startsWith('ba') ? [prediction('bali', 'Bali', 'Indonesia')] : [prediction('pune', 'Pune', 'India')])
+    const { result, unmount } = await renderHook(() => usePlacesAutocomplete({ debounce: 0 }))
+    await act(() => result.current.setValue('pu'))
+    await wait(10)
+    await act(() => result.current.setValue('ba'))
+    await wait(10)
+    await act(async () => {
+      await getDetails({ placeId: 'pune' })
+    })
+    await unmount()
+    await act(async () => {
+      await getDetails({ placeId: 'bali' })
+    })
+    expect(fake.fetchFieldsCalls.map((c) => [c.id, c.fromPrediction])).toEqual([
+      ['pune', false],
+      ['bali', false],
+    ])
   })
 })

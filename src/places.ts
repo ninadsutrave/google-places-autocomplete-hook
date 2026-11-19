@@ -11,8 +11,46 @@ export interface FormattableText {
   matches: StringRange[]
 }
 
+export interface LatLng {
+  lat(): number
+  lng(): number
+}
+
+export interface LatLngBounds {
+  getNorthEast(): LatLng
+  getSouthWest(): LatLng
+  toJSON(): { north: number; south: number; east: number; west: number }
+}
+
+export interface AddressComponent {
+  longText: string | null
+  shortText: string | null
+  types: string[]
+}
+
+/**
+ * A google.maps.places.Place. Fields are undefined until fetched, and null when Google has no value.
+ * Fields beyond these are present as well; ask for them in fetchFields and read them through the index signature.
+ */
 export interface Place {
   id: string
+  displayName?: string | null
+  formattedAddress?: string | null
+  adrFormatAddress?: string | null
+  location?: LatLng | null
+  viewport?: LatLngBounds | null
+  addressComponents?: AddressComponent[] | null
+  types?: string[] | null
+  primaryType?: string | null
+  googleMapsURI?: string | null
+  websiteURI?: string | null
+  nationalPhoneNumber?: string | null
+  internationalPhoneNumber?: string | null
+  rating?: number | null
+  userRatingCount?: number | null
+  priceLevel?: string | null
+  businessStatus?: string | null
+  utcOffsetMinutes?: number | null
   fetchFields(options: { fields: string[] }): Promise<{ place: Place }>
   [field: string]: unknown
 }
@@ -73,31 +111,37 @@ export interface Suggestion {
   prediction: PlacePrediction
 }
 
-const getMaps = (): any => (typeof window === 'undefined' ? undefined : (window as any).google?.maps)
+/** The part of window.google.maps this package uses */
+interface MapsGlobal {
+  importLibrary?: (name: string) => Promise<unknown>
+}
+
+const getMaps = (): MapsGlobal | undefined =>
+  typeof window === 'undefined' ? undefined : (window as { google?: { maps?: MapsGlobal } }).google?.maps
+
+const notLoaded = () => new Error('google-places-autocomplete-hook: the Google Maps JavaScript API is not loaded')
 
 /** True once the Maps JavaScript API script has loaded. */
 export const isLoaded = (): boolean => typeof getMaps()?.importLibrary === 'function'
 
+export const loadLibrary = <T>(name: string): Promise<T> => {
+  const importLibrary = getMaps()?.importLibrary
+  return importLibrary ? (importLibrary(name) as Promise<T>) : Promise.reject(notLoaded())
+}
+
 let places: Promise<PlacesLibrary> | undefined
 
 export const loadPlaces = (): Promise<PlacesLibrary> => {
-  if (!isLoaded()) return Promise.reject(new Error('google-places-autocomplete-hook: the Google Maps JavaScript API is not loaded'))
+  if (!isLoaded()) return Promise.reject(notLoaded())
   if (!places) {
     // forget a failed load so the next call can try again
-    places = getMaps()
-      .importLibrary('places')
-      .catch((error: unknown) => {
-        places = undefined
-        throw error
-      })
+    places = loadLibrary<PlacesLibrary>('places').catch((error: unknown) => {
+      places = undefined
+      throw error
+    })
   }
-  return places as Promise<PlacesLibrary>
+  return places
 }
-
-export const loadLibrary = <T>(name: string): Promise<T> =>
-  isLoaded()
-    ? getMaps().importLibrary(name)
-    : Promise.reject(new Error('google-places-autocomplete-hook: the Google Maps JavaScript API is not loaded'))
 
 export const toSuggestion = (prediction: PlacePrediction): Suggestion => ({
   placeId: prediction.placeId,
@@ -112,17 +156,17 @@ export const toSuggestion = (prediction: PlacePrediction): Suggestion => ({
 })
 
 /**
- * One autocomplete session. Google bills the requests made while typing as a single session
- * when they share a token and end with a details call, so the token is kept until then.
+ * One autocomplete session: the requests made while typing share a token, and the details call that ends the session
+ * carries it too (a prediction's toPlace() keeps the token it was fetched with). A new search gets a new session.
  */
 export const createSession = () => {
   let token: unknown
   return {
     token: (library: PlacesLibrary) => (token ??= new library.AutocompleteSessionToken()),
-    end: () => {
-      token = undefined
-    },
   }
 }
 
 export type Session = ReturnType<typeof createSession>
+
+/** The session each prediction was fetched in */
+export const sessionOf = new WeakMap<PlacePrediction, Session>()

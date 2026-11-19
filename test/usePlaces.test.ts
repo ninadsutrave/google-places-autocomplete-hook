@@ -216,3 +216,55 @@ describe('usePlaces', () => {
     await unmount()
   })
 })
+
+describe('sessions', () => {
+  const tokenOf = (i: number) => fake.requests[i].sessionToken
+
+  it('setValue(value, false) ends the search, so the next one gets a new token', async () => {
+    const { result, unmount } = await renderHook(() => usePlaces({ debounce: 0 }))
+    await act(() => result.current.setValue('pu'))
+    await wait(10)
+    await act(() => result.current.setValue('Pune, Maharashtra, India', false))
+    await act(() => result.current.setValue('mu'))
+    await wait(10)
+    expect(tokenOf(1)).not.toBe(tokenOf(0))
+    await unmount()
+  })
+
+  it('getPlace on a suggestion from an earlier search leaves the current session alone', async () => {
+    const { result, unmount } = await renderHook(() => usePlaces({ debounce: 0 }))
+    await act(() => result.current.setValue('pu'))
+    await wait(10)
+    const earlier = result.current.suggestions[0]
+    await act(() => result.current.setValue('Pune', false))
+    await act(() => result.current.setValue('ba'))
+    await wait(10)
+    await act(async () => {
+      await result.current.getPlace(earlier)
+    })
+    await act(() => result.current.setValue('bal'))
+    await wait(10)
+    expect(fake.fetchFieldsCalls[0]).toMatchObject({ id: 'pune', fromPrediction: true })
+    expect(tokenOf(2)).toBe(tokenOf(1))
+    expect(tokenOf(1)).not.toBe(tokenOf(0))
+    await unmount()
+  })
+
+  it('starts the next session before the details call resolves', async () => {
+    fake.detailsDelay = 40
+    const { result, unmount } = await renderHook(() => usePlaces({ debounce: 0 }))
+    await act(() => result.current.setValue('pu'))
+    await wait(10)
+    let details: Promise<unknown> | undefined
+    await act(() => {
+      details = result.current.getPlace(result.current.suggestions[0])
+    })
+    await act(() => result.current.setValue('mu'))
+    await wait(10)
+    await act(async () => {
+      await details
+    })
+    expect(tokenOf(1)).not.toBe(tokenOf(0))
+    await unmount()
+  })
+})
