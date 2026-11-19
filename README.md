@@ -128,6 +128,10 @@ Differences:
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Please follow the [code of conduct](CODE_OF_CONDUCT.md), and report security issues as described in [SECURITY.md](SECURITY.md).
 
+## Maintainer
+
+Maintained by [Ninad Sutrave](https://ninadsutrave.com).
+
 ## License
 
 [MIT](LICENSE)

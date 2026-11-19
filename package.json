@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "description": "React hook for Google Places Autocomplete on the Places API (New), with session tokens handled for you and a drop-in mode for use-places-autocomplete",
   "license": "MIT",
-  "author": "Ninad Sutrave",
+  "author": {
+    "name": "Ninad Sutrave",
+    "url": "https://ninadsutrave.com"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ninadsutrave/google-places-autocomplete-hook.git"
