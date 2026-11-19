@@ -26,7 +26,7 @@ export interface UsePlacesResult {
   loading: boolean
   error: unknown
   clearSuggestions: () => void
-  /** Fetch details for a suggestion. This ends the session, so the next keystroke starts a new one. */
+  /** Fetch details for a suggestion (default fields: id, formattedAddress, location). This ends the session, so the next keystroke starts a new one. */
   getPlace: (suggestion: Suggestion, fields?: string[]) => Promise<Place>
   /** Load the places library, for when the Maps script loads after mount */
   init: () => void
@@ -41,7 +41,8 @@ interface State {
 
 const idle: State = { status: 'idle', suggestions: [], loading: false, error: undefined }
 
-export const defaultFields = ['id', 'displayName', 'formattedAddress', 'location']
+// all in Google's cheapest Place Details tier (Essentials); displayName and most other fields cost more
+export const defaultFields = ['id', 'formattedAddress', 'location']
 
 export function usePlaces({
   request,

@@ -75,22 +75,22 @@ export function PlaceSearch() {
 
 ### Returns
 
-|                                                |                                                                                                              |
-| :--------------------------------------------- | :----------------------------------------------------------------------------------------------------------- |
-| `ready`                                        | The places library has loaded                                                                                |
-| `value`, `setValue(value, shouldFetch = true)` | The input value. Pass `false` to set it without fetching, for example after a selection                      |
-| `suggestions`                                  | `{ placeId, text, mainText, secondaryText, matches, mainTextMatches, types, distanceMeters, prediction }[]`  |
-| `status`                                       | `'idle'`, `'ok'`, `'zero-results'` or `'error'`                                                              |
-| `loading`, `error`                             |                                                                                                              |
-| `clearSuggestions()`                           | Empty the list and ignore any request in flight                                                              |
-| `getPlace(suggestion, fields?)`                | Fetch place details and end the session. Default fields: `id`, `displayName`, `formattedAddress`, `location` |
-| `init()`                                       | Load the library, if the Maps script loads after the component mounts                                        |
+|                                                |                                                                                                             |
+| :--------------------------------------------- | :---------------------------------------------------------------------------------------------------------- |
+| `ready`                                        | The places library has loaded                                                                               |
+| `value`, `setValue(value, shouldFetch = true)` | The input value. Pass `false` to set it without fetching, for example after a selection                     |
+| `suggestions`                                  | `{ placeId, text, mainText, secondaryText, matches, mainTextMatches, types, distanceMeters, prediction }[]` |
+| `status`                                       | `'idle'`, `'ok'`, `'zero-results'` or `'error'`                                                             |
+| `loading`, `error`                             |                                                                                                             |
+| `clearSuggestions()`                           | Empty the list and ignore any request in flight                                                             |
+| `getPlace(suggestion, fields?)`                | Fetch place details and end the session. Default fields: `id`, `formattedAddress`, `location`               |
+| `init()`                                       | Load the library, if the Maps script loads after the component mounts                                       |
 
 ## Sessions and billing
 
 Every request while the user types shares one session token. `getPlace` fetches the details with that session and then starts a new one for the next search. Google bills a session that ends in a details request as one session, not one charge per keystroke.
 
-If a search ends without `getPlace`, for example when the user picks a suggestion and you only need its text, the session is never concluded. Google then bills those requests individually. Ask only for the fields you need, because the fields decide the price of the details request.
+If a search ends without `getPlace`, for example when the user picks a suggestion and you only need its text, the session is never concluded. Google then bills those requests individually. Ask only for the fields you need, because the most expensive field decides the price of the details request. `formattedAddress`, `location`, `viewport`, `addressComponents` and `types` are in Google's cheapest tier, Essentials. `displayName` is in the Pro tier, and phone numbers, websites and ratings are in Enterprise ([field list](https://developers.google.com/maps/documentation/javascript/place-class-data-fields)).
 
 ## Migrating from use-places-autocomplete
 
@@ -106,7 +106,7 @@ The hook returns the same `{ ready, value, suggestions: { loading, status, data 
 Differences:
 
 - **`requestOptions`** is converted: `componentRestrictions.country` becomes `includedRegionCodes`, `types` becomes `includedPrimaryTypes`, and `location` with `radius` or `bounds` becomes `locationBias`. Google's new API accepts a different list of types, so check yours ([supported types](https://developers.google.com/maps/documentation/places/web-service/place-types)).
-- **`getDetails`** asks for `place_id`, `name`, `formatted_address`, `geometry` and `address_components` unless you pass `fields`. The old version asked for every field and was billed for all of them. Called with a suggestion from the hook, it also ends that session.
+- **`getDetails`** asks for `place_id`, `formatted_address`, `geometry` and `address_components` unless you pass `fields`, all in Google's cheapest tier. Add `name` if you need it (Pro tier). The old version asked for every field and was billed for all of them. Called with a suggestion from the hook, it also ends that session.
 - **`getGeocode`** still works, but it doesn't end the autocomplete session. Use `getDetails` with `geometry` and `getLatLng` if you only need coordinates.
 - **`cache`, `cacheKey` and `googleMaps`** are accepted and ignored.
 - **`status`** is one of `''`, `'OK'`, `'ZERO_RESULTS'` or `'UNKNOWN_ERROR'`.

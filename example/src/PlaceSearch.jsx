@@ -12,9 +12,10 @@ export function PlaceSearch() {
     setValue(suggestion.text, false)
     clearSuggestions()
     setActive(-1)
-    const result = await getPlace(suggestion, ['displayName', 'formattedAddress', 'location'])
+    // fields from Google's cheapest Place Details tier
+    const result = await getPlace(suggestion, ['formattedAddress', 'location'])
     setPlace({
-      name: result.displayName,
+      name: suggestion.mainText,
       address: result.formattedAddress,
       lat: result.location.lat(),
       lng: result.location.lng(),

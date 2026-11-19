@@ -113,7 +113,7 @@ describe('usePlaces', () => {
     await act(async () => {
       await result.current.getPlace(result.current.suggestions[1])
     })
-    expect(fake.fetchFieldsCalls[0].fields).toEqual(['id', 'displayName', 'formattedAddress', 'location'])
+    expect(fake.fetchFieldsCalls[0].fields).toEqual(['id', 'formattedAddress', 'location'])
     await unmount()
   })
 

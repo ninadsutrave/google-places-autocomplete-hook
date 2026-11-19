@@ -212,8 +212,8 @@ const toPlaceResult = (place: Place, fields: string[]): PlaceResult => {
   return result
 }
 
-// legacy getDetails returned every field (and billed for all of them); ask for a basic set unless told otherwise
-const basicFields = ['place_id', 'name', 'formatted_address', 'geometry', 'address_components']
+// legacy getDetails returned every field (and billed for all of them); default to fields in the cheapest tier
+const basicFields = ['place_id', 'formatted_address', 'geometry', 'address_components']
 
 export const getDetails = async ({
   placeId,
