@@ -26,7 +26,7 @@ jobs:
       # trusted publishing needs npm 11.5.1 or later
       - run: npm install -g npm@latest
       - run: npm ci
-      - uses: changesets/action@v1
+      - uses: changesets/action@v2
         with:
           publish: npm run release
           title: Version Packages
