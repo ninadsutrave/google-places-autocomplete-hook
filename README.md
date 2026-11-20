@@ -159,12 +159,8 @@ The [demo page](https://ninadsutrave.github.io/google-places-autocomplete-hook/)
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Please follow the [code of conduct](CODE_OF_CONDUCT.md), and report security issues as described in [SECURITY.md](SECURITY.md).
 
-## Maintainer
-
-Maintained by [Ninad Sutrave](https://ninadsutrave.com).
-
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE) © [Ninad Sutrave](https://ninadsutrave.com)
 
 This is an independent project, not affiliated with or endorsed by Google. Google Maps is a trademark of Google LLC.
