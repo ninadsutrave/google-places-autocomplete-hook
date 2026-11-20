@@ -5,9 +5,9 @@
 [![size](https://img.shields.io/bundlejs/size/google-places-autocomplete-hook)](https://bundlejs.com/?q=google-places-autocomplete-hook)
 [![license](https://img.shields.io/npm/l/google-places-autocomplete-hook)](LICENSE)
 
-A small React hook for Google Places Autocomplete on the **Places API (New)**.
+A small React hook for Google Places Autocomplete on the **Places API (New)**. [Live demo](https://ninadsutrave.github.io/google-places-autocomplete-hook/)
 
-Google moved the old Places API and `AutocompleteService` to legacy status on 1 March 2025, and since October 2026 the legacy Places API can no longer be enabled on new Google Cloud projects. Popular hooks such as `use-places-autocomplete` still depend on it, so they don't work for a new project. This package uses the new `AutocompleteSuggestion` API instead. It keeps one session token per search, so typing and the final details request are billed as a session rather than request by request. It also includes a [drop-in mode](#migrating-from-use-places-autocomplete) for `use-places-autocomplete`.
+Google moved the old Places API and `AutocompleteService` to legacy status on 1 March 2025. Since then the legacy API is hidden from new projects and left out of new API keys, and [Google says](https://developers.google.com/maps/documentation/javascript/legacy/places) that since October 2026 it can no longer be enabled for new Google Cloud projects. Popular hooks such as `use-places-autocomplete` still depend on it. This package uses the new `AutocompleteSuggestion` API instead. It keeps one session token per search, so typing and the final details request are billed as a session rather than request by request. It also includes a [drop-in mode](#migrating-from-use-places-autocomplete) for `use-places-autocomplete`.
 
 - Headless: bring your own input and list
 - Session tokens handled for you
@@ -123,7 +123,7 @@ Differences:
 
 ## Example
 
-[`example/`](example) has an accessible search box with keyboard navigation, built with `usePlaces`.
+[`example/`](example) has an accessible search box with keyboard navigation, built with `usePlaces`, and the same search on `/compat`. Both run in the [live demo](https://ninadsutrave.github.io/google-places-autocomplete-hook/), which answers from a built-in list of places instead of calling Google.
 
 ## Contributing
 
