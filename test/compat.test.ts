@@ -7,6 +7,7 @@ import usePlacesAutocomplete, {
   toAutocompleteRequest,
   type ClearCache,
   type GetDetailsArgs,
+  type LatLon,
   type Status,
   type Suggestions,
 } from '../src/compat'
@@ -134,7 +135,8 @@ describe('google-places-autocomplete-hook/compat', () => {
   it('getGeocode uses the geocoding library; getLatLng and getZipCode handle plain values', async () => {
     const results = await getGeocode({ address: 'Pune' })
     expect(fake.requests).toEqual([{ geocode: { address: 'Pune' } }])
-    expect(getLatLng(results[0])).toEqual({ lat: 1, lng: 2 })
+    const point: LatLon = getLatLng(results[0])
+    expect(point).toEqual({ lat: 1, lng: 2 })
     expect(getLatLng({ geometry: { location: { lat: 3, lng: 4 } } })).toEqual({ lat: 3, lng: 4 })
     expect(() => getLatLng({})).toThrow(/geometry/)
     expect(getZipCode({ address_components: [{ long_name: 'Long', short_name: 'S', types: ['postal_code'] }] }, true)).toBe('S')

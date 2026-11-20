@@ -259,6 +259,8 @@ export interface AddressComponent {
 }
 
 export type LatLng = LatLngLiteral
+/** @deprecated The 1.x name; use `LatLng` */
+export type LatLon = LatLng
 export type ZipCode = string | undefined
 
 /** A google.maps.GeocoderResult, as far as this package types it */

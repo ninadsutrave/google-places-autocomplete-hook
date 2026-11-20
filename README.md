@@ -118,6 +118,7 @@ Differences:
 - **`getGeocode`** still works, but it doesn't end the autocomplete session, so those requests are billed one by one. Use `getDetails` with `geometry` and `getLatLng` if you only need coordinates.
 - **`cache`, `cacheKey` and `googleMaps`** are accepted and ignored.
 - **`status`** is one of `''`, `'OK'`, `'ZERO_RESULTS'` or `'UNKNOWN_ERROR'`; the type also allows the other legacy values so existing comparisons compile.
+- **Coming from 1.x**: `getLatLng` and `getZipCode` return plain values, not Promises, so `await` them or use the result directly; `.then()` on them throws. `getZipCode` returns `undefined` rather than `null` when there is no postal code. The `LatLon` type is still exported.
 - **`types`**: `address` becomes the street-level types; `geocode` and `establishment` have no equivalent in the new API, so no type filter is applied for them.
 
 ## Example
