@@ -431,3 +431,11 @@ footer {
 .guide > .hint {
   margin-bottom: 12px;
 }
+
+.guide a.shot {
+  display: inline-block;
+}
+
+.guide a.shot:hover img {
+  border-color: var(--accent);
+}

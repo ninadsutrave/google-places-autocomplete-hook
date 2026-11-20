@@ -100,13 +100,15 @@ function KeyForm({ hasKey }) {
               Open <a href="https://developers.google.com/maps/demo-key">Google&apos;s Maps Demo Key page</a> and click{' '}
               <b>Get a Demo Key</b>. You need a personal Google account, such as Gmail; Workspace accounts aren&apos;t eligible.
             </p>
-            <img
-              src="./demo-key-step-1.jpg"
-              alt="Google's Maps Demo Key page with the Get a Demo Key button"
-              width="800"
-              height="640"
-              loading="lazy"
-            />
+            <a href="https://developers.google.com/maps/demo-key" className="shot">
+              <img
+                src="./demo-key-step-1.jpg"
+                alt="Google's Maps Demo Key page with the Get a Demo Key button. Opens the page."
+                width="800"
+                height="640"
+                loading="lazy"
+              />
+            </a>
           </li>
           <li>
             <p>Accept the Maps Demo Key terms. Google shows the key straight away and also emails it to you. Copy it.</p>
