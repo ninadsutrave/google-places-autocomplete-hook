@@ -1,5 +1,11 @@
 # google-places-autocomplete-hook
 
+## 0.1.8
+
+### Patch Changes
+
+- 1ff40dc: README: the license line now names the copyright holder.
+
 ## 0.1.7
 
 ### Patch Changes
