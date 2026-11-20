@@ -1,5 +1,11 @@
 # google-places-autocomplete-hook
 
+## 0.1.3
+
+### Patch Changes
+
+- efb369b: README: attribute the October 2026 legacy API change to Google's notice, and link the live demo.
+
 ## 0.1.2
 
 ### Patch Changes
