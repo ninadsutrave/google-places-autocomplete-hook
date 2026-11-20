@@ -393,3 +393,41 @@ footer {
   border-left: 2px solid var(--accent);
   font-size: 14px;
 }
+
+.guide {
+  margin-top: 16px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.guide summary {
+  padding: 12px 0;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.guide ol {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 14px;
+}
+
+.guide li {
+  margin-bottom: 16px;
+}
+
+.guide li p {
+  margin: 0 0 8px;
+}
+
+.guide img {
+  display: block;
+  max-width: min(100%, 560px);
+  height: auto;
+  border: 1px solid var(--line);
+}
+
+.guide > .hint {
+  margin-bottom: 12px;
+}

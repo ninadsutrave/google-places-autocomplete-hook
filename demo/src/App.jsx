@@ -89,9 +89,40 @@ function KeyForm({ hasKey }) {
         <a href={`${repo}/blob/main/demo/src/maps.js`}>Check the code</a>, and use <b>Forget</b> to remove the key.
       </p>
       <p className="hint">
-        The key needs <b>Maps JavaScript API</b> and <b>Places API (New)</b>, and its website restrictions must allow{' '}
+        Using your own key instead? It needs <b>Maps JavaScript API</b> and <b>Places API (New)</b>, and its website restrictions must allow{' '}
         <code>https://ninadsutrave.github.io/*</code>. A separate key with low daily quotas is a good idea for trying things out.
       </p>
+      <details className="guide" open={!hasKey}>
+        <summary>No key? Get a free Demo Key from Google, with no billing needed</summary>
+        <ol>
+          <li>
+            <p>
+              Open <a href="https://developers.google.com/maps/demo-key">Google&apos;s Maps Demo Key page</a> and click{' '}
+              <b>Get a Demo Key</b>. You need a personal Google account, such as Gmail; Workspace accounts aren&apos;t eligible.
+            </p>
+            <img
+              src="./demo-key-step-1.jpg"
+              alt="Google's Maps Demo Key page with the Get a Demo Key button"
+              width="800"
+              height="640"
+              loading="lazy"
+            />
+          </li>
+          <li>
+            <p>Accept the Maps Demo Key terms. Google shows the key straight away and also emails it to you. Copy it.</p>
+          </li>
+          <li>
+            <p>
+              Paste it into the field above and click <b>Use key</b>.
+            </p>
+            <img src="./demo-key-step-3.jpg" alt="The key field on this page" width="800" height="98" loading="lazy" />
+          </li>
+        </ol>
+        <p className="hint">
+          A Demo Key covers everything this page uses (checked on 21 Nov 2026). It&apos;s free, and when it reaches its daily limit it
+          pauses until the next day instead of charging you. It&apos;s meant for trying things out, not for production.
+        </p>
+      </details>
     </form>
   )
 }
