@@ -1,5 +1,11 @@
 # google-places-autocomplete-hook
 
+## 0.1.5
+
+### Patch Changes
+
+- 94219bc: README: name the legacy API errors people search for.
+
 ## 0.1.4
 
 ### Patch Changes
