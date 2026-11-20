@@ -23,6 +23,8 @@ On the server, [google-maps-fetch](https://github.com/ninadsutrave/google-maps-f
 
 ```sh
 npm install google-places-autocomplete-hook
+# or
+yarn add google-places-autocomplete-hook
 ```
 
 ### Set up Google Cloud
