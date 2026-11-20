@@ -33,7 +33,7 @@ export function PlaceSearch() {
   }
 
   return (
-    <main style={{ maxWidth: 480, margin: '48px auto', fontFamily: 'system-ui, sans-serif' }}>
+    <section className="search">
       <label htmlFor="place">Search a place</label>
       <input
         id="place"
@@ -50,10 +50,9 @@ export function PlaceSearch() {
           setActive(-1)
         }}
         onKeyDown={onKeyDown}
-        style={{ display: 'block', width: '100%', boxSizing: 'border-box', padding: 8, marginTop: 4 }}
       />
       {open && (
-        <ul id="place-list" role="listbox" style={{ listStyle: 'none', margin: 0, padding: 0, border: '1px solid #ccc' }}>
+        <ul id="place-list" role="listbox">
           {suggestions.map((s, i) => (
             <li
               key={s.placeId}
@@ -62,20 +61,23 @@ export function PlaceSearch() {
               aria-selected={i === active}
               onMouseDown={(e) => e.preventDefault()}
               onClick={() => select(s)}
-              style={{ padding: 8, cursor: 'pointer', background: i === active ? '#eef' : undefined }}
             >
               <strong>{s.mainText}</strong> <small>{s.secondaryText}</small>
             </li>
           ))}
         </ul>
       )}
-      {loading && <p aria-live="polite">Searching…</p>}
-      {status === 'zero-results' && <p>No places found.</p>}
+      {loading && (
+        <p className="status" aria-live="polite">
+          Searching…
+        </p>
+      )}
+      {status === 'zero-results' && <p className="status">No places found.</p>}
       {place && (
         <p id="result">
           {place.name}: {place.address} ({place.lat}, {place.lng})
         </p>
       )}
-    </main>
+    </section>
   )
 }
