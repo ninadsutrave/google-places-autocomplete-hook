@@ -1,5 +1,11 @@
 # google-places-autocomplete-hook
 
+## 0.1.7
+
+### Patch Changes
+
+- 00d00f3: Link the new demo page, where you can try the hook with your own key, from the README and as the npm homepage.
+
 ## 0.1.6
 
 ### Patch Changes
