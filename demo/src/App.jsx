@@ -150,6 +150,9 @@ export function App({ hasKey }) {
       <header>
         <p className="eyebrow">React hook · Places API (New)</p>
         <h1>google-places-autocomplete-hook</h1>
+        <p className="byline">
+          by <a href="https://ninadsutrave.com">Ninad Sutrave</a>
+        </p>
         <p className="lede">
           Places Autocomplete for React on Google&apos;s new API. Headless, with one session token per search handled for you, and a drop-in
           mode for use-places-autocomplete.
@@ -207,7 +210,7 @@ export function App({ hasKey }) {
       </section>
 
       <footer>
-        MIT licensed. Not affiliated with Google. <a href={repo}>Source</a>
+        Made by <a href="https://ninadsutrave.com">Ninad Sutrave</a>. MIT licensed. Not affiliated with Google. <a href={repo}>Source</a>
       </footer>
     </main>
   )

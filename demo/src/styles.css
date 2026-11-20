@@ -74,6 +74,18 @@ h1 {
   overflow-wrap: anywhere;
 }
 
+.byline {
+  margin: 12px 0 0;
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.byline a {
+  color: var(--text);
+  text-decoration-color: var(--accent);
+  text-underline-offset: 3px;
+}
+
 .lede {
   max-width: 640px;
   margin: 20px 0 0;
