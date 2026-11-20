@@ -25,13 +25,30 @@ On the server, [google-maps-fetch](https://github.com/ninadsutrave/google-maps-f
 npm install google-places-autocomplete-hook
 ```
 
-Enable **Places API (New)** for your key in Google Cloud, then load the Maps JavaScript API:
+### Set up Google Cloud
+
+1. In a Google Cloud project with billing turned on, enable **Maps JavaScript API** and **Places API (New)**. You don't need the legacy "Places API".
+2. Create an API key. Under _Application restrictions_, choose _Websites_ and add your site, plus the address you develop on (for example `http://localhost:5173/*`). Under _API restrictions_, allow the same two APIs.
+
+### Load the Maps JavaScript API
 
 ```html
 <script async src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY&loading=async"></script>
 ```
 
-Any loader that defines `google.maps.importLibrary` works too. The hook loads the `places` library itself.
+Any loader that defines `google.maps.importLibrary` works too, such as `@googlemaps/js-api-loader` or the `APIProvider` from `@vis.gl/react-google-maps`:
+
+```jsx
+import { APIProvider } from '@vis.gl/react-google-maps'
+
+export const App = () => (
+  <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_KEY}>
+    <PlaceSearch />
+  </APIProvider>
+)
+```
+
+The hook loads the `places` library itself, and waits for the script if it arrives after your component mounts.
 
 ## Usage
 
@@ -101,6 +118,17 @@ What Google charges for a session depends on how it ends ([session pricing](http
 - **No `getPlace`**, for example when you only need the suggestion's text or you geocode the address instead: every autocomplete request is billed per request.
 
 So for a box that only needs an address and coordinates, the defaults are the cheapest option. If you need a display name or more, one details request at the top tier buys free autocomplete ([field tiers](https://developers.google.com/maps/documentation/javascript/place-class-data-fields)).
+
+## Troubleshooting
+
+| What you see                                  | What to check                                                                                                      |
+| :-------------------------------------------- | :----------------------------------------------------------------------------------------------------------------- |
+| `ApiNotActivatedMapError` in the console      | Maps JavaScript API isn't enabled in the key's project                                                             |
+| `RefererNotAllowedMapError`                   | The page's address isn't in the key's list of websites                                                             |
+| `ApiTargetBlockedMapError`                    | The key's API restrictions leave out Maps JavaScript API                                                           |
+| `status` is `'error'` with a permission error | Places API (New) isn't enabled, or the key's API restrictions leave it out                                         |
+| `LegacyApiNotActivatedMapError`               | Something on the page still calls the legacy API (`AutocompleteService`); this hook doesn't                        |
+| `ready` stays `false`                         | The Maps script hasn't loaded: check the script tag or loader, and look in the console for one of the errors above |
 
 ## Migrating from use-places-autocomplete
 
