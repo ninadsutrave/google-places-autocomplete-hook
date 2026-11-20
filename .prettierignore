@@ -1,5 +1,6 @@
 dist
 node_modules
 example/dist
+demo/dist
 CHANGELOG.md
 package-lock.json
