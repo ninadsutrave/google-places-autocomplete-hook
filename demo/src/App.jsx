@@ -115,7 +115,6 @@ function KeyForm({ hasKey }) {
             <p>
               Paste it into the field above and click <b>Use key</b>.
             </p>
-            <img src="./demo-key-step-3.jpg" alt="The key field on this page" width="800" height="98" loading="lazy" />
           </li>
         </ol>
         <p className="hint">
