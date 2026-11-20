@@ -1,6 +1,6 @@
 {
   "name": "google-places-autocomplete-hook",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "React hook for Google Places Autocomplete on the Places API (New), with session tokens handled for you and a drop-in mode for use-places-autocomplete",
   "license": "MIT",
   "author": {

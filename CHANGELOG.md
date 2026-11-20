@@ -1,5 +1,11 @@
 # google-places-autocomplete-hook
 
+## 0.1.2
+
+### Patch Changes
+
+- aedbb5b: `/compat` exports the `LatLon` type from use-places-autocomplete 1.x, and the README lists what changes when coming from 1.x.
+
 ## 0.1.1
 
 ### Patch Changes
