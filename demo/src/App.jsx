@@ -84,15 +84,11 @@ function KeyForm({ hasKey }) {
         )}
       </div>
       <p className="privacy">
-        <b>We never store or see your key.</b> It stays in this browser&apos;s local storage and goes only to Google, to load Maps. This
-        page is static files on GitHub Pages, with no server, analytics or tracking.{' '}
-        <a href={`${repo}/blob/main/demo/src/maps.js`}>Check the code</a>, and use <b>Forget</b> to remove the key.
+        <b>We never store or see your key.</b> It stays in this browser&apos;s local storage.
+        <br />
+        Use <b>Forget</b> to remove the key.
       </p>
-      <p className="hint">
-        Using your own key instead? It needs <b>Maps JavaScript API</b> and <b>Places API (New)</b>, and its website restrictions must allow{' '}
-        <code>https://ninadsutrave.github.io/*</code>. A separate key with low daily quotas is a good idea for trying things out.
-      </p>
-      <details className="guide" open={!hasKey}>
+      <details className="guide">
         <summary>No key? Get a free Demo Key from Google, with no billing needed</summary>
         <ol>
           <li>
@@ -119,10 +115,6 @@ function KeyForm({ hasKey }) {
             </p>
           </li>
         </ol>
-        <p className="hint">
-          A Demo Key covers everything this page uses (checked on 21 Nov 2026). It&apos;s free, and when it reaches its daily limit it
-          pauses until the next day instead of charging you. It&apos;s meant for trying things out, not for production.
-        </p>
       </details>
     </form>
   )
