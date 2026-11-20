@@ -9,6 +9,8 @@ A small React hook for Google Places Autocomplete on the **Places API (New)**.
 
 Google moved the old Places API and `AutocompleteService` to legacy status on 1 March 2025. Since then the legacy API is hidden from new projects and left out of new API keys, and [Google says](https://developers.google.com/maps/documentation/javascript/legacy/places) that since October 2026 it can no longer be enabled for new Google Cloud projects. Popular hooks such as `use-places-autocomplete` still depend on it. This package uses the new `AutocompleteSuggestion` API instead. It keeps one session token per search, so typing and the final details request are billed as a session rather than request by request. It also includes a [drop-in mode](#migrating-from-use-places-autocomplete) for `use-places-autocomplete`.
 
+If the browser console shows `LegacyApiNotActivatedMapError` ("You're calling a legacy API, which is not enabled for your project") or says `AutocompleteService` is not available to new customers, your code is calling the legacy Places API. This package calls the new one.
+
 - Headless: bring your own input and list
 - Session tokens handled for you
 - Debounced, ignores out-of-order responses, safe to unmount mid-request
