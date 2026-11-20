@@ -1,5 +1,11 @@
 # google-places-autocomplete-hook
 
+## 0.1.4
+
+### Patch Changes
+
+- 0130cdb: README: remove the live demo link; the example runs with your own key instead.
+
 ## 0.1.3
 
 ### Patch Changes
