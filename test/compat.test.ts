@@ -189,6 +189,20 @@ describe('sessions through getDetails', () => {
     expect(toAutocompleteRequest({ types: ['(cities)'] }).includedPrimaryTypes).toEqual(['(cities)'])
   })
 
+  it('drops requestOptions keys the new API would reject, as the legacy API ignored them', async () => {
+    const request = toAutocompleteRequest({ types: ['(cities)'], debounce: 300, sessionToken: 'old', language: 'de', includedRegionCodes: ['ch'] })
+    expect(request).toEqual({ includedPrimaryTypes: ['(cities)'], language: 'de', includedRegionCodes: ['ch'] })
+
+    const { result, unmount } = await renderHook(() =>
+      usePlacesAutocomplete({ debounce: 0, requestOptions: { types: ['(cities)'], debounce: 300 } }),
+    )
+    await act(() => result.current.setValue('be'))
+    await wait(10)
+    expect(fake.requests[0]).not.toHaveProperty('debounce')
+    expect(fake.requests[0]).toMatchObject({ input: 'be', includedPrimaryTypes: ['(cities)'] })
+    await unmount()
+  })
+
   it('keeps the same data array between renders that do not change the suggestions', async () => {
     const { result, unmount } = await renderHook(() => usePlacesAutocomplete({ debounce: 0 }))
     await act(() => result.current.setValue('pu'))

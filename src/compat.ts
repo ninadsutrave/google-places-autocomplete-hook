@@ -31,6 +31,12 @@ export interface RequestOptions {
   offset?: number
   /** Ignored: sessions are handled for you */
   sessionToken?: unknown
+  /** Places API (New) names, passed on as they are */
+  includedPrimaryTypes?: string[]
+  includedRegionCodes?: string[]
+  inputOffset?: number
+  /** Ignored, as the legacy API ignored keys it didn't know */
+  [option: string]: unknown
 }
 
 export interface HookArgs {
@@ -102,9 +108,22 @@ const primaryTypes = (types: string[]) => {
   return [...new Set(types.flatMap((t) => (t === 'address' ? addressTypes : [t])))].slice(0, 5)
 }
 
+// the legacy API ignored keys it didn't know; AutocompleteSuggestion throws on them, so only these are passed on
+const passedThrough = [
+  'language',
+  'region',
+  'locationBias',
+  'locationRestriction',
+  'origin',
+  'includedPrimaryTypes',
+  'includedRegionCodes',
+  'inputOffset',
+] as const
+
 export const toAutocompleteRequest = (options: RequestOptions = {}): AutocompleteRequest => {
-  const { componentRestrictions, types, location, radius, bounds, offset, sessionToken, ...rest } = options
-  const request: AutocompleteRequest = { ...rest }
+  const { componentRestrictions, types, location, radius, bounds, offset } = options
+  const request: AutocompleteRequest = {}
+  for (const key of passedThrough) if (options[key] !== undefined) (request as Record<string, unknown>)[key] = options[key]
   if (componentRestrictions?.country) request.includedRegionCodes = ([] as string[]).concat(componentRestrictions.country)
   if (types?.length) {
     const primary = primaryTypes(types)
