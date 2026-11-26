@@ -190,7 +190,13 @@ describe('sessions through getDetails', () => {
   })
 
   it('drops requestOptions keys the new API would reject, as the legacy API ignored them', async () => {
-    const request = toAutocompleteRequest({ types: ['(cities)'], debounce: 300, sessionToken: 'old', language: 'de', includedRegionCodes: ['ch'] })
+    const request = toAutocompleteRequest({
+      types: ['(cities)'],
+      debounce: 300,
+      sessionToken: 'old',
+      language: 'de',
+      includedRegionCodes: ['ch'],
+    })
     expect(request).toEqual({ includedPrimaryTypes: ['(cities)'], language: 'de', includedRegionCodes: ['ch'] })
 
     const { result, unmount } = await renderHook(() =>
