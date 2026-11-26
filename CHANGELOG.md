@@ -1,5 +1,11 @@
 # google-places-autocomplete-hook
 
+## 0.1.9
+
+### Patch Changes
+
+- 2186f6d: `/compat` no longer sends `requestOptions` keys that Places API (New) rejects, such as a stray `debounce`. The legacy API ignored them; the new one threw and showed no suggestions.
+
 ## 0.1.8
 
 ### Patch Changes
