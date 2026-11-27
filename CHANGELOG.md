@@ -1,5 +1,11 @@
 # google-places-autocomplete-hook
 
+## 0.1.10
+
+### Patch Changes
+
+- a61e688: Add npm keywords so the package shows up in more searches.
+
 ## 0.1.9
 
 ### Patch Changes
